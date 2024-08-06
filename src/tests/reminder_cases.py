@@ -170,6 +170,20 @@ IS_ACTIVE_VALUES = [
         },
         True,
     ),
+    (
+        "is active is not shown for a reminder in the past",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 14,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2000, month=1, day=15),
+            "recurring": False
+        },
+        False,
+    )
 ]
 
 AGE_VALUES = [
@@ -198,5 +212,50 @@ AGE_VALUES = [
             "today": dt(year=2021, month=1, day=1),
         },
         21,
+    ),
+]
+
+NON_RECURRING_DAYS_TIL_VALUES = [
+    (
+        "days til is calculated correctly for a non recurring reminder in the past",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 1,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2000, month=1, day=7),
+            "recurring": False,
+        },
+        -6,
+    ),
+    (
+        "days til is calculated correctly for a non recurring reminder today",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 7,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2000, month=1, day=7),
+            "recurring": False,
+        },
+        0,
+    ),
+    (
+        "days til is calculated correctly for a non recurring reminder in the future",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 7,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2000, month=1, day=1),
+            "recurring": False,
+        },
+        6,
     ),
 ]

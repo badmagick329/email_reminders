@@ -12,6 +12,7 @@ class Reminder(BaseModel):
     emails: list[str]
     year: int | None = None
     today: dt | None = None
+    recurring: bool = True
 
     @field_validator("remind_in_days")
     def check_remind_in_days(cls, v):
@@ -54,16 +55,18 @@ class Reminder(BaseModel):
 
     def to_datetime(self) -> dt:
         year = self.datetime_today.year if self.year is None else self.year
+        datetime_for_reminder = dt(year=year, month=self.month, day=self.day)
+        if not self.recurring:
+            return datetime_for_reminder
 
-        date_time = dt(year=year, month=self.month, day=self.day)
-        while self.datetime_today - date_time > timedelta(0):
+        while self.datetime_today - datetime_for_reminder > timedelta(0):
             year += 1
-            date_time = dt(year=year, month=self.month, day=self.day)
+            datetime_for_reminder = dt(year=year, month=self.month, day=self.day)
 
-        assert self.datetime_today - date_time <= timedelta(
+        assert self.datetime_today - datetime_for_reminder <= timedelta(
             0
-        ), "date_time must be in the future"
-        return date_time
+        ), "datetime_for_reminder must be in the future for a recurring reminder"
+        return datetime_for_reminder
 
     @property
     def datetime_today(self):

@@ -8,6 +8,7 @@ from src.tests.reminder_cases import (
     DATE_TIME_IN_FUTURE_VALUES,
     DAYS_TIL_VALUES,
     IS_ACTIVE_VALUES,
+    NON_RECURRING_DAYS_TIL_VALUES,
     TEST_LABELS,
 )
 
@@ -59,4 +60,13 @@ def test_that_is_active_is_calculated_correctly(test_name, input, expected):
 def test_that_age_is_calculated_correctly(test_name, input, expected):
     reminder = Reminder(**input)
     got = reminder.age()
+    assert got == expected, f"{test_name} failed. Expected {expected} but got {got}"
+
+
+@pytest.mark.parametrize(TEST_LABELS, NON_RECURRING_DAYS_TIL_VALUES)
+def test_that_days_til_is_calculated_correctly_for_non_recurring_reminders(
+    test_name, input, expected
+):
+    reminder = Reminder(**input)
+    got = reminder.days_til()
     assert got == expected, f"{test_name} failed. Expected {expected} but got {got}"
