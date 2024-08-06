@@ -1,0 +1,6 @@
+{
+  "SMTP_USER": "sender@address.com",
+  "SMTP_PASSWORD": "password123",
+  "SMTP_HOST": "smtp.address.com",
+  "TEST_ADDRESS": "test@email.com"
+}
