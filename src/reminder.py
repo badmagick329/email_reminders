@@ -88,7 +88,7 @@ class Reminder(BaseModel):
         return self.days_til() in self.remind_in_days
 
     def is_birthday(self) -> bool:
-        return "birthday" not in self.name.lower()
+        return "birthday" in self.name.lower()
 
     def age(self) -> int | None:
         if self.year is None:
