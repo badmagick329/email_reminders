@@ -4,6 +4,7 @@ import pytest
 
 from src.reminder import Reminder
 from src.tests.reminder_cases import (
+    AGE_VALUES,
     DATE_TIME_IN_FUTURE_VALUES,
     DAYS_TIL_VALUES,
     IS_ACTIVE_VALUES,
@@ -51,4 +52,11 @@ def test_that_days_til_is_calculated_correctly(test_name, input, expected):
 def test_that_is_active_is_calculated_correctly(test_name, input, expected):
     reminder = Reminder(**input)
     got = reminder.is_active()
+    assert got == expected, f"{test_name} failed. Expected {expected} but got {got}"
+
+
+@pytest.mark.parametrize(TEST_LABELS, AGE_VALUES)
+def test_that_age_is_calculated_correctly(test_name, input, expected):
+    reminder = Reminder(**input)
+    got = reminder.age()
     assert got == expected, f"{test_name} failed. Expected {expected} but got {got}"

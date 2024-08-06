@@ -50,9 +50,6 @@ class Reminder(BaseModel):
     @field_validator("emails")
     def check_emails(cls, v):
         assert all(isinstance(i, str) for i in v), "emails must be a list of strings"
-        assert all(
-            "@" in i for i in v
-        ), "emails must be a list of valid email addresses"
         return v
 
     def to_datetime(self) -> dt:
@@ -86,3 +83,12 @@ class Reminder(BaseModel):
 
     def is_active(self) -> bool:
         return self.days_til() in self.remind_in_days
+
+    def is_birthday(self) -> bool:
+        return "birthday" not in self.name.lower()
+
+    def age(self) -> int | None:
+        if self.year is None:
+            return None
+
+        return self.datetime_today.year - self.year

@@ -169,5 +169,34 @@ IS_ACTIVE_VALUES = [
             "today": dt(year=2000, month=1, day=11),
         },
         True,
-    )
+    ),
+]
+
+AGE_VALUES = [
+    (
+        "age is calculated correctly for a year ago",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 1,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2001, month=1, day=1),
+        },
+        1,
+    ),
+    (
+        "age is calculated correctly for 21 years ago",
+        {
+            "name": "test",
+            "year": 2000,
+            "month": 1,
+            "day": 1,
+            "remind_in_days": [1],
+            "emails": ["test@email.com"],
+            "today": dt(year=2021, month=1, day=1),
+        },
+        21,
+    ),
 ]

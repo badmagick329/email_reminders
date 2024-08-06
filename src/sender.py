@@ -6,18 +6,15 @@ from config import Config
 
 class SMTPSender:
 
-    def __init__(self):
-        self.config = Config()
-        print(f"Config file: {self.config.config_file}")
+    def __init__(self, config: Config | None = None):
+        self.config = config or Config()
         self.server = smtplib.SMTP_SSL(self.config.smtp_host, 465)
         self.server.login(self.config.smtp_user, self.config.smtp_password)
 
-    def send_mail(self, to, subject, content) -> Exception | None:
+    def send_mail(self, to: str, subject: str, content: str) -> Exception | None:
         try:
-            print("Sending email at", dt.now())
             msg = f"Subject: {subject}\n\n{content}"
             self.server.sendmail(self.config.smtp_user, to, msg)
-            print("sent")
         except Exception as e:
             return e
 
