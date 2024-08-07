@@ -20,6 +20,7 @@ config = Config()
 def main():
     reminders = read_reminders()
     sender = SMTPSender(config)
+    logging.info(f'Script started. {len(reminders)} reminders found')
 
     for reminder_args in reminders:
         reminder = Reminder(**reminder_args)
@@ -58,7 +59,7 @@ def get_subject(reminder: Reminder):
 def get_content(reminder: Reminder):
     age = reminder.is_birthday() and reminder.age()
     content = f"Reminder: {reminder.name}"
-    if age is not None:
+    if age is not False:
         content += f"\nThey will be {age} years old"
     return content
 
