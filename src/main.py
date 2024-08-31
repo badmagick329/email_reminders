@@ -63,7 +63,7 @@ def get_content(reminder: Reminder):
         date_text = f"{reminder.year}-{date_text}"
     content = f"Reminder: {reminder.name} ({date_text})"
 
-    age = reminder.is_birthday() and reminder.age()
+    age = bool(reminder.is_birthday() and reminder.age())
     if age is not False:
         content += f"\nThey will be {age} years old"
     return content
