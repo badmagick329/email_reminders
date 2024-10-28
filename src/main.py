@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 
 from config import Config
 from consts import REMINDERS_FILE
@@ -21,13 +22,16 @@ def main():
     reminders = read_reminders()
     sender = SMTPSender(config)
     logging.info(f"Script started. {len(reminders)} reminders found")
+    dry_run = False
+    if len(sys.argv) > 1 and sys.argv[1] == "--dry-run":
+        dry_run = True
 
     for reminder_args in reminders:
         reminder = Reminder(**reminder_args)
         if not reminder.is_active():
             continue
 
-        send_emails(sender, reminder)
+        send_emails(sender, reminder, dry_run)
 
 
 def read_reminders():
@@ -36,7 +40,7 @@ def read_reminders():
     return reminders_list
 
 
-def send_emails(sender: SMTPSender, reminder: Reminder):
+def send_emails(sender: SMTPSender, reminder: Reminder, dry_run: bool):
     for name in reminder.emails:
         address = config.resolve_address(name)
         if not address:
@@ -45,9 +49,14 @@ def send_emails(sender: SMTPSender, reminder: Reminder):
         logging.info(f"Sending email to {address} about {reminder.name}")
         subject = get_subject(reminder)
         content = get_content(reminder)
-        err = sender.send_mail(address, subject, content)
-        if err is not None:
-            logging.info(f"Failed to send email to {address}: {err}")
+        if dry_run:
+            print(f"Address: {address}")
+            print(f"Subject: {subject}")
+            print(f"Content: {content}")
+        else:
+            err = sender.send_mail(address, subject, content)
+            if err is not None:
+                logging.info(f"Failed to send email to {address}: {err}")
 
 
 def get_subject(reminder: Reminder):
@@ -63,12 +72,11 @@ def get_content(reminder: Reminder):
         date_text = f"{reminder.year}-{date_text}"
     content = f"Reminder: {reminder.name} ({date_text})"
 
-    age = bool(reminder.is_birthday() and reminder.age())
-    if age is not False:
-        content += f"\nThey will be {age} years old"
+    age_exists = bool(reminder.is_birthday() and reminder.age())
+    if age_exists is not False:
+        content += f"\nThey will be {reminder.age()} years old"
     return content
 
 
 if __name__ == "__main__":
-    # _test()
     main()
